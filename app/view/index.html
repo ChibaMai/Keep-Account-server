@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%- title %></title>
+  <link rel="stylesheet" href="/public/css/main.css">
+</head>
+<body>
+  <div id="app">
+    <!-- 使用模板数据 -->
+    <nav>
+      <h1><%- title %></h1>
+    </nav>
+    <div class="container">
+      <!--  -->
+      <h2>Congrats | 恭喜</h2>
+      <p>You're successfully running JSON Server ✧*｡٩(ˊᗜˋ*)و✧*｡</p>
+      <p>您已成功运行 JSON 服务器 ✧*｡٩(ˊᗜˋ*)و✧*｡</p>
+      <!--  -->
+      <h2>Resources | 资源</h2>
+      <div class="Resources">
+        <ul>
+          <% list.forEach(function(elem){ %>
+            <li>
+              <a href="<%- elem.url %>" target="_blank"><%- '/' + elem.title %></a>
+              <sup><%- elem.count %></sup>
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+      <p>To access and modify resources, you can use any HTTP method:</p>
+      <p>
+        <code>GET</code>
+        <code>POST</code>
+        <code>PUT</code>
+        <code>PATCH</code>
+        <code>DELETE</code>
+        <code>OPTIONS</code>
+      </p>
+      <!--  -->
+      <h2>Documentation | 文档</h2>
+      <!--  -->
+    </div>
+  </div>
+</body>
+</html>
