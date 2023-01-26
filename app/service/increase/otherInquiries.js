@@ -1,4 +1,4 @@
-const Service = require('egg').Service
+const Service = require('egg').Service;
 
 class OtherInquiries extends Service {
   /**
@@ -6,31 +6,31 @@ class OtherInquiries extends Service {
    * /MonthlyInquiryBill/2023&1
    */
   async MonthlyInquiryBill() {
-    const { ctx, app } = this
+    const { ctx, app } = this;
     try {
-      const year = ctx.params.year
-      const month = ctx.params.month
+      const year = ctx.params.year;
+      const month = ctx.params.month;
       const sql = {
         // 查询年
         where: {
           year,
-          month
+          month,
         },
         orders: [
-          ['time', 'desc'],
-        ]
-      }
+          [ 'time', 'desc' ],
+        ],
+      };
 
       if (!this.isValidYear(year)) {
         ctx.body = {
           status: 201,
           type: 'ERROR_DATA',
-          message: `${year} <===> 年份不合法`
-        }
-        return
+          message: `${year} <===> 年份不合法`,
+        };
+        return;
       }
 
-      const result = await app.mysql.select('bookkeeping', sql)
+      const result = await app.mysql.select('bookkeeping', sql);
 
       ctx.body = {
         status: 200,
@@ -38,13 +38,13 @@ class OtherInquiries extends Service {
         type: 'SUCCESS_DATA',
         message: `请求成功 <===> ${year}年${month}月收入支出`,
         result,
-      }
+      };
     } catch (error) {
       ctx.body = {
         status: 201,
         type: 'ERROR_DATA',
-        message: error.sqlMessage
-      }
+        message: error.sqlMessage,
+      };
     }
   }
 
@@ -57,7 +57,7 @@ class OtherInquiries extends Service {
    * 使用方法 /AnnualStatistics/2023
    */
   async AnnualStatistics() {
-    const { ctx, app } = this
+    const { ctx, app } = this;
     try {
       let ExpensesAmount = [],
         IncomeAmount = [],
@@ -65,41 +65,41 @@ class OtherInquiries extends Service {
         sumOfExpenses,
         // 收入
         sumOfIncome;
-      let year = ctx.params.year;
+      const year = ctx.params.year;
       const sql = {
         where: {
-          year: year
-        }
-      }
+          year,
+        },
+      };
 
       // 判断年份是否合法
       if (!this.isValidYear(year)) {
         ctx.body = {
           status: 201,
           type: 'ERROR_DATA',
-          message: `${year} <===> 年份不合法`
-        }
-        return
+          message: `${year} <===> 年份不合法`,
+        };
+        return;
       }
 
       // bookkeeping
-      let result = await app.mysql.select('bookkeeping', sql)
+      const result = await app.mysql.select('bookkeeping', sql);
 
       // 取出今年所有金额
       for (const key in result) {
         // 返回到数组里面 0收入 1支出
         if (result[key].genre === 0) {
-          IncomeAmount.push(result[key].money)
+          IncomeAmount.push(result[key].money);
         } else {
-          ExpensesAmount.push(result[key].money)
+          ExpensesAmount.push(result[key].money);
         }
       }
 
       // 计算 某年 支出金额总和
-      sumOfExpenses = ExpensesAmount.length === 0 ? '0' : parseFloat(eval(ExpensesAmount.join('+'))).toFixed(2)
+      sumOfExpenses = ExpensesAmount.length === 0 ? '0' : parseFloat(eval(ExpensesAmount.join('+'))).toFixed(2);
       // 收入
-      sumOfIncome = IncomeAmount.length === 0 ? '0' : parseFloat(eval(IncomeAmount.join('+'))).toFixed(2)
-      
+      sumOfIncome = IncomeAmount.length === 0 ? '0' : parseFloat(eval(IncomeAmount.join('+'))).toFixed(2);
+
       ctx.body = {
         status: 200,
         type: 'SUCCESS_DATA',
@@ -110,13 +110,13 @@ class OtherInquiries extends Service {
         IncomeAmount,
         sumOfExpenses,
         sumOfIncome,
-      }
+      };
     } catch (error) {
       ctx.body = {
         status: 201,
         type: 'ERROR_DATA',
-        message: error.sqlMessage
-      }
+        message: error.sqlMessage,
+      };
     }
   }
 
@@ -126,37 +126,37 @@ class OtherInquiries extends Service {
    * income      收入
    * expenditure 支出
    * 返回 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] 12月总和
-   * 
+   *
    * /echartsMonth/:year === /echartsMonth/2023
    */
   async echartsMonth() {
-    const { ctx, app } = this
+    const { ctx, app } = this;
     try {
       const year = ctx.params.year;
       const sql = {
         where: {
-          year
-        }
-      }
-      let income = ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'],
-        expenditure = ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'],
+          year,
+        },
+      };
+      let income = [ '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-' ],
+        expenditure = [ '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-' ],
         // 收入
         amountMonthlyIncome = {},
         // 消费支出
         monthlySpendingAmount = {};
-      
-      let resultIncome = await app.mysql.select('income', sql)
-      let resultExpenditure = await app.mysql.select('expenditure', sql)
 
-      amountMonthlyIncome = this.monthly_income_expenses(resultIncome)
-      monthlySpendingAmount = this.monthly_income_expenses(resultExpenditure)
+      const resultIncome = await app.mysql.select('income', sql);
+      const resultExpenditure = await app.mysql.select('expenditure', sql);
+
+      amountMonthlyIncome = this.monthly_income_expenses(resultIncome);
+      monthlySpendingAmount = this.monthly_income_expenses(resultExpenditure);
 
       for (const key in amountMonthlyIncome) {
-        income[key - 1] = parseFloat(eval(amountMonthlyIncome[key].join('+'))).toFixed(2)
+        income[key - 1] = parseFloat(eval(amountMonthlyIncome[key].join('+'))).toFixed(2);
       }
 
       for (const key in monthlySpendingAmount) {
-        expenditure[key - 1] = parseFloat(eval(monthlySpendingAmount[key].join('+'))).toFixed(2)
+        expenditure[key - 1] = parseFloat(eval(monthlySpendingAmount[key].join('+'))).toFixed(2);
       }
 
       ctx.body = {
@@ -169,13 +169,13 @@ class OtherInquiries extends Service {
         expenditure,
         amountMonthlyIncome,
         monthlySpendingAmount,
-      }
+      };
     } catch (error) {
       ctx.body = {
         status: 201,
         type: 'ERROR_DATA',
-        message: error.sqlMessage
-      }
+        message: error.sqlMessage,
+      };
     }
   }
 
@@ -183,7 +183,7 @@ class OtherInquiries extends Service {
    * 删除 数据
    */
   async deleteAll() {
-    const { ctx, app } = this
+    const { ctx, app } = this;
     try {
       let time = ctx.params.time,
         genre = ctx.params.genre,
@@ -195,14 +195,14 @@ class OtherInquiries extends Service {
       // 收入==0  支出==1
       if (Number(genre) === 0) {
         // Bookkeeping
-        resultBookkeepingIncome = await app.mysql.delete('bookkeeping', { time })
+        resultBookkeepingIncome = await app.mysql.delete('bookkeeping', { time });
         // Income  income
-        resultIncome = await app.mysql.delete('income', { time })
+        resultIncome = await app.mysql.delete('income', { time });
       } else {
         // Bookkeeping
-        resultBookkeepingExpenditure = await app.mysql.delete('bookkeeping', { time })
-        // Expenditure 
-        resultExpenditure = await app.mysql.delete('expenditure', { time })
+        resultBookkeepingExpenditure = await app.mysql.delete('bookkeeping', { time });
+        // Expenditure
+        resultExpenditure = await app.mysql.delete('expenditure', { time });
       }
       ctx.body = {
         status: 200,
@@ -211,32 +211,33 @@ class OtherInquiries extends Service {
         resultBookkeepingIncome,
         resultIncome,
         resultBookkeepingExpenditure,
-        resultExpenditure
-      }
+        resultExpenditure,
+      };
     } catch (error) {
       ctx.body = {
         status: 201,
         type: 'ERROR_DATA',
-        message: error.sqlMessage
-      }
+        message: error.sqlMessage,
+      };
     }
   }
 
   /**
    * 循环今年所有数据
    * 并返回一个对象 整合相同月份
+   * @param obj
    */
   monthly_income_expenses(obj) {
-    let result = {}
+    const result = {};
 
     for (const key in obj) {
       if (!result[obj[key].month]) {
-        result[obj[key].month] = []
+        result[obj[key].month] = [];
       }
-      result[obj[key].month].push(obj[key].money)
+      result[obj[key].month].push(obj[key].money);
     }
 
-    return result
+    return result;
   }
 
   // 判断年份函数
@@ -245,4 +246,4 @@ class OtherInquiries extends Service {
   }
 }
 
-module.exports = OtherInquiries
+module.exports = OtherInquiries;

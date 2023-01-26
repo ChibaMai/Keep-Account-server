@@ -1,4 +1,4 @@
-const Controller = require('egg').Controller
+const Controller = require('egg').Controller;
 
 class TestController extends Controller {
   // 测试
@@ -7,4 +7,4 @@ class TestController extends Controller {
   }
 }
 
-module.exports = TestController
+module.exports = TestController;

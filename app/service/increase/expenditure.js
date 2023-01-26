@@ -1,4 +1,4 @@
-const Service = require('egg').Service
+const Service = require('egg').Service;
 
 // 支出
 /**
@@ -7,11 +7,11 @@ const Service = require('egg').Service
  * classification: inputValueClassification,
  * remark: inputValueRemark,
  * time: '',
- * 
- * 
- * 
+ *
+ *
+ *
  * ['🍚 吃饭', '🥤 零食', '👗 衣服', '📱 话费', '💻 数码', '🚗 交通', '🧻 日用', '💰 理财', '📖 学习', '💧 运动', '💊 生病', '🎁 礼物', '🔔 订阅']
- * 
+ *
  * | id | money | month | time | year | category | comment |
  */
 class ExpenditureService extends Service {
@@ -19,7 +19,7 @@ class ExpenditureService extends Service {
   /** keepAccount
    * 测试
    * INSERT INTO `test` VALUES(null, 198.3, 1, '1673313863047', 2023, '🍚 吃饭', '今天吃火锅');
-   * 
+   *
    * {
    * id: null
    * money: 100
@@ -30,13 +30,13 @@ class ExpenditureService extends Service {
    * month: 1,
    * year: 2023
    * }
-   * 
+   *
    * /addExpenditure?amount=100.00&month=1&year=2023&genre=1&classification=🍚 吃饭&remark=今天吃火锅&time=1673313863047
    */
   async addExpenditure() {
-    const { ctx, app } = this
+    const { ctx, app } = this;
     try {
-      let query = ctx.query
+      const query = ctx.query;
       // 判断值是否为空
       // 如果为空则返回错误信息
       // 停止数据插入
@@ -46,28 +46,28 @@ class ExpenditureService extends Service {
             status: 202,
             type: 'ERROR_DATA',
             error: key,
-            message: `${key}数据不能为空`
-          }
-          return
+            message: `${key}数据不能为空`,
+          };
+          return;
         }
       }
 
       // 全部插入
       const sql = {
-        'id': null,
-        'money': query.amount,
-        'year': query.year,
-        'month': query.month,
-        'time': query.time,
-        'genre': query.genre,
-        'category': query.classification,
-        'comment': query.remark
-      }
+        id: null,
+        money: query.amount,
+        year: query.year,
+        month: query.month,
+        time: query.time,
+        genre: query.genre,
+        category: query.classification,
+        comment: query.remark,
+      };
 
       // 全部插入
-      const resultBookkeeping = await app.mysql.insert('bookkeeping', sql)
+      const resultBookkeeping = await app.mysql.insert('bookkeeping', sql);
       // // 单独支出月份插入
-      const resultExpenditure = await app.mysql.insert('expenditure', sql)
+      const resultExpenditure = await app.mysql.insert('expenditure', sql);
 
       ctx.body = {
         status: 200,
@@ -75,49 +75,49 @@ class ExpenditureService extends Service {
         message: '插入成功',
         resultBookkeeping,
         resultExpenditure,
-      }
+      };
     } catch (error) {
       ctx.body = {
         status: 201,
         type: 'ERROR_DATA',
-        message: error.sqlMessage
-      }
+        message: error.sqlMessage,
+      };
     }
   }
 
   // 查询支出全部数据
   async getExpenditure() {
-    const { ctx, app } = this
+    const { ctx, app } = this;
     try {
       const data = await app.mysql.select('test');
-      
+
       ctx.body = {
         status: 200,
         type: 'SUCCESS_DATA',
         count: data.length,
         data,
-      }
+      };
     } catch (error) {
       ctx.body = {
         status: 201,
         type: 'ERROR_DATA',
-        message: error.sqlMessage
-      }
+        message: error.sqlMessage,
+      };
     }
   }
 
   // 查询支出  年  数据
   async getExpenditureYear() {
-    const { ctx, app } = this
+    const { ctx, app } = this;
     try {
       const sql = {
         // 查询年
         where: {
-          year: ctx.params.year
-        }
-      }
+          year: ctx.params.year,
+        },
+      };
 
-      const result = await app.mysql.select('income')
+      const result = await app.mysql.select('income');
 
       console.log(result);
 
@@ -132,17 +132,17 @@ class ExpenditureService extends Service {
         status: 200,
         count: result.length,
         type: 'SUCCESS_DATA',
-        result
-      }
+        result,
+      };
     } catch (error) {
       ctx.body = {
         status: 201,
         type: 'ERROR_DATA',
-        message: error.sqlMessage
-      }
+        message: error.sqlMessage,
+      };
     }
   }
 
 }
 
-module.exports = ExpenditureService
+module.exports = ExpenditureService;

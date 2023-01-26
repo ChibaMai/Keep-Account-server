@@ -5,8 +5,8 @@ const { Controller } = require('egg');
 class HomeController extends Controller {
   async index() {
     const { ctx } = this;
-    let title = 'KeepAccouns Server';
-    let list = [
+    const title = 'KeepAccouns Server';
+    const list = [
       { id: 1, title: 'tags', url: '/tags', count: 'object' },
       { id: 1, title: 'metadata', url: '/metadata', count: 'object' },
       { id: 1, title: 'images', url: '/images', count: '6071x' },
@@ -17,8 +17,8 @@ class HomeController extends Controller {
     // 渲染模板
     await ctx.render('index', {
       title,
-      list
-    })
+      list,
+    });
   }
 }
 

@@ -9,7 +9,7 @@ module.exports = {
 
   cors: {
     enable: true,
-    package: 'egg-cors'
+    package: 'egg-cors',
   },
 
   mysql: {
@@ -19,7 +19,7 @@ module.exports = {
 
   nunjucks: {
     enable: true,
-    package: 'egg-view-nunjucks'
+    package: 'egg-view-nunjucks',
   },
 
   ejs: {

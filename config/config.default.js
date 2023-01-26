@@ -36,18 +36,18 @@ module.exports = appInfo => {
       password: 'root@123456',
       // 数据库名
       database: 'keepAccount',
-      charset : 'utf8mb4'
+      charset: 'utf8mb4',
     },
     default: {
-      connectionLimit: 10
+      connectionLimit: 10,
     },
     app: true,
     agent: false,
   };
 
   config.cors = {
-    origin: ['*'],
-    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
+    origin: [ '*' ],
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
   };
 
   config.view = {
