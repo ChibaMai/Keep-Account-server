@@ -23,6 +23,14 @@ module.exports = appInfo => {
     // myAppName: 'egg',
   };
 
+  config.cluster = {
+    listen: {
+      path: '',
+      port: 7001,
+      hostname: '127.0.0.1',
+    }
+  };
+
   config.mysql = {
     // 单数据库信息配置
     client: {
@@ -46,7 +54,7 @@ module.exports = appInfo => {
   };
 
   config.cors = {
-    origin: [ '*' ],
+    origin: ['http://localhost:5173', 'http://192.168.2.6:5173'],
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH',
   };
 

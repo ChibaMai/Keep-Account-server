@@ -31,6 +31,18 @@ class OtherInquiries extends Service {
       }
 
       const result = await app.mysql.select('bookkeeping', sql);
+      
+      let Income = []
+      let Expenses = []
+
+      for (const key in result) {
+        // 返回到数组里面 0收入 1支出
+        if (result[key].genre === 0) {
+          Income.push(result[key].money)
+        } else {
+          Expenses.push(result[key].money)
+        }
+      }
 
       ctx.body = {
         status: 200,
@@ -38,6 +50,8 @@ class OtherInquiries extends Service {
         type: 'SUCCESS_DATA',
         message: `请求成功 <===> ${year}年${month}月收入支出`,
         result,
+        Income: eval((Income).join('+')),
+        Expenses: eval((Expenses).join('+'))
       };
     } catch (error) {
       ctx.body = {
@@ -165,8 +179,10 @@ class OtherInquiries extends Service {
         length: resultIncome.length,
         status: 200,
         year,
+        // 月账单 总和 (本月花销总和)
         income,
         expenditure,
+        // 月账单集合
         amountMonthlyIncome,
         monthlySpendingAmount,
       };
